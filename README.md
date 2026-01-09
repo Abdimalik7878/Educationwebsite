@@ -11,7 +11,7 @@ This project is a simple full-stack website for your **Community Engagement thro
 ---
 
 ## 1) Requirements
-- Node.js 18+ (recommended)
+- Node.js undergraduate (recommended)
 - npm
 
 ---
