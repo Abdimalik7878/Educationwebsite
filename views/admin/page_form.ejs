@@ -1,0 +1,60 @@
+<%- include("partials/nav_admin", { user }) %>
+
+<div class="row">
+  <div class="col-lg-8">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h5 fw-bold"><%= page ? "Edit Page" : "New Page" %></h1>
+        <p class="text-muted small">Tip: choose a clear slug (e.g. sensors-perception, path-planning).</p>
+
+        <% if (error) { %>
+          <div class="alert alert-danger"><%= error %></div>
+        <% } %>
+
+        <form method="POST" action="<%= page ? ("/admin/pages/" + page.id + "/edit") : "/admin/pages/new" %>">
+          <div class="mb-3">
+            <label class="form-label">Title</label>
+            <input class="form-control" name="title" value="<%= page ? page.title : "" %>" required>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Slug</label>
+            <input class="form-control" name="slug" value="<%= page ? page.slug : "" %>" placeholder="auto from title">
+            <div class="form-text">This becomes the URL: <code>/p/your-slug</code></div>
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Audience</label>
+              <select class="form-select" name="audience">
+                <% const aud = page ? page.audience : "general"; %>
+                <option value="general" <%= aud==="general"?"selected":"" %>>General</option>
+                <option value="junior" <%= aud==="junior"?"selected":"" %>>Junior</option>
+                <option value="undergrad" <%= aud==="undergrad"?"selected":"" %>>Undergrad/Pro</option>
+              </select>
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Status</label>
+              <select class="form-select" name="status">
+                <% const st = page ? page.status : "draft"; %>
+                <option value="draft" <%= st==="draft"?"selected":"" %>>Draft</option>
+                <option value="published" <%= st==="published"?"selected":"" %>>Published</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="d-flex gap-2">
+            <button class="btn btn-dark">Save</button>
+            <a class="btn btn-outline-secondary" href="/admin">Cancel</a>
+            <% if (page) { %>
+              <a class="btn btn-outline-success ms-auto" href="/admin/pages/<%= page.id %>/blocks">Manage Blocks →</a>
+            <% } %>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer_admin") %>

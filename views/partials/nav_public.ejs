@@ -1,0 +1,16 @@
+<div class="nav">
+  <div class="nav-inner">
+    <div class="brand"><a href="/">Robotics<span>Edu</span></a></div>
+    <div class="menu">
+      <a href="/">Home</a>
+      <a href="/admin">Admin</a>
+      <% if (user) { %>
+        <form action="/admin/logout" method="POST" style="display:inline;">
+          <button class="btn" type="submit" style="border:none; cursor:pointer;">Logout (<%= user.username %>)</button>
+        </form>
+      <% } else { %>
+        <a class="btn" href="/admin/login">Login</a>
+      <% } %>
+    </div>
+  </div>
+</div>

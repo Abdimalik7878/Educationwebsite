@@ -1,0 +1,74 @@
+<%- include("partials/nav_admin", { user }) %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h4 fw-bold mb-0">Users</h1>
+    <div class="text-muted small">Admins can create editor accounts for teammates.</div>
+  </div>
+  <a class="btn btn-dark" href="/admin">Back</a>
+</div>
+
+<% if (error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+<% } %>
+
+<div class="row g-3">
+  <div class="col-lg-5">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h6 fw-bold">Create new user</h2>
+        <form action="/admin/users/new" method="POST">
+          <div class="mb-2">
+            <label class="form-label">Username</label>
+            <input class="form-control" name="username" required>
+          </div>
+          <div class="mb-2">
+            <label class="form-label">Password</label>
+            <input class="form-control" type="password" name="password" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Role</label>
+            <select class="form-select" name="role">
+              <option value="editor">Editor (recommended)</option>
+              <option value="admin">Admin</option>
+            </select>
+          </div>
+          <button class="btn btn-primary w-100">Create</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-7">
+    <div class="card shadow-sm">
+      <div class="table-responsive">
+        <table class="table table-striped align-middle mb-0">
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Role</th>
+              <th>Created</th>
+              <th style="width:120px;"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% users.forEach(u => { %>
+              <tr>
+                <td class="fw-semibold"><%= u.username %></td>
+                <td><span class="badge text-bg-light border"><%= u.role %></span></td>
+                <td class="text-muted small"><%= u.created_at.slice(0,19).replace('T',' ') %></td>
+                <td class="text-end">
+                  <form action="/admin/users/<%= u.id %>/delete" method="POST" onsubmit="return confirm('Delete this user?');">
+                    <button class="btn btn-sm btn-outline-danger" <%= (u.username===user.username) ? "disabled" : "" %>>Delete</button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include("partials/footer_admin") %>

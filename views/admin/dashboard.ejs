@@ -1,0 +1,63 @@
+<%- include("partials/nav_admin", { user }) %>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <div>
+    <h1 class="h4 fw-bold mb-0">Pages</h1>
+    <div class="text-muted small">Create pages then add flexible blocks: text, images, videos, callouts, quizzes.</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a class="btn btn-primary" href="/admin/pages/new">+ New Page</a>
+    <a class="btn btn-outline-secondary" href="/admin/media">Media</a>
+    <% if (user.role === "admin") { %>
+      <a class="btn btn-outline-dark" href="/admin/users">Users</a>
+    <% } %>
+  </div>
+</div>
+
+<div class="card shadow-sm">
+  <div class="table-responsive">
+    <table class="table table-striped align-middle mb-0">
+      <thead>
+        <tr>
+          <th>Title</th>
+          <th>Slug</th>
+          <th>Audience</th>
+          <th>Status</th>
+          <th>Updated</th>
+          <th style="width:240px;"></th>
+        </tr>
+      </thead>
+      <tbody>
+      <% pages.forEach(p => { %>
+        <tr>
+          <td class="fw-semibold"><%= p.title %></td>
+          <td class="text-muted"><%= p.slug %></td>
+          <td><span class="badge text-bg-light border"><%= p.audience %></span></td>
+          <td>
+            <% if (p.status === "published") { %>
+              <span class="badge text-bg-success">published</span>
+            <% } else { %>
+              <span class="badge text-bg-secondary">draft</span>
+            <% } %>
+          </td>
+          <td class="text-muted small"><%= p.updated_at.slice(0,19).replace('T',' ') %></td>
+          <td class="text-end">
+            <a class="btn btn-sm btn-outline-primary" href="/admin/pages/<%= p.id %>/edit">Edit</a>
+            <a class="btn btn-sm btn-outline-success" href="/admin/pages/<%= p.id %>/blocks">Blocks</a>
+            <% if (p.status === "published") { %>
+              <a class="btn btn-sm btn-dark" href="/p/<%= p.slug %>">View</a>
+            <% } %>
+            <% if (user.role === "admin") { %>
+              <form action="/admin/pages/<%= p.id %>/delete" method="POST" style="display:inline;" onsubmit="return confirm('Delete this page?');">
+                <button class="btn btn-sm btn-outline-danger">Delete</button>
+              </form>
+            <% } %>
+          </td>
+        </tr>
+      <% }) %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<%- include("partials/footer_admin") %>

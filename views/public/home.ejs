@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Robotics Education Exhibit</title>
+  <link rel="stylesheet" href="/public/style.css"/>
+</head>
+<body>
+  <%- include("../partials/nav_public", { user }) %>
+  <div class="container">
+    <div class="hero">
+      <div class="badge">Community Engagement • Robotics Education</div>
+      <h1>Digital Exhibit for Robotics Fundamentals</h1>
+      <p>
+        This website hosts educational videos and explanations for different audiences (junior learners and undergraduates/professionals).
+        Editors can add or update text, images, and videos from the admin dashboard—without changing the code.
+      </p>
+    </div>
+
+    <div class="grid">
+      <div class="card half">
+        <h2>Quick Start</h2>
+        <div class="kv">
+          <ol>
+            <li>Go to <b>Admin</b> → create a page (example: <i>Sensors & Perception</i>).</li>
+            <li>Add blocks: text, image, video (YouTube or MP4 upload), callout, quiz.</li>
+            <li>Set page status to <b>Published</b>.</li>
+          </ol>
+        </div>
+        <div class="hr"></div>
+        <a class="btn" href="/admin">Open Admin Dashboard</a>
+      </div>
+
+      <div class="card half">
+        <h2>Published Pages</h2>
+        <% if (!pages || pages.length === 0) { %>
+          <p class="kv">No published pages yet. Create one in Admin → Pages.</p>
+        <% } else { %>
+          <div class="kv">
+            <% pages.forEach(p => { %>
+              <div style="padding:10px 0; border-bottom:1px solid rgba(255,255,255,.08)">
+                <div style="display:flex; gap:10px; align-items:center; justify-content:space-between;">
+                  <div>
+                    <div style="font-weight:800;"><a href="/p/<%= p.slug %>"><%= p.title %></a></div>
+                    <div class="breadcrumb">Audience: <%= p.audience %> • Updated: <%= p.updated_at.slice(0,10) %></div>
+                  </div>
+                  <a class="btn" href="/p/<%= p.slug %>">View</a>
+                </div>
+              </div>
+            <% }) %>
+          </div>
+        <% } %>
+      </div>
+
+      <div class="card third">
+        <h2>Audience Tiers</h2>
+        <p class="kv">
+          <b>Junior:</b> simple language + visuals<br/>
+          <b>Undergrad/Pro:</b> deeper math + algorithms<br/>
+          <b>General:</b> mixed explanations
+        </p>
+      </div>
+
+      <div class="card third">
+        <h2>Supported Content</h2>
+        <p class="kv">
+          ✅ Text sections<br/>
+          ✅ Images + captions<br/>
+          ✅ YouTube embeds<br/>
+          ✅ Uploaded MP4 videos<br/>
+          ✅ Callout boxes<br/>
+          ✅ Quick quizzes
+        </p>
+      </div>
+
+      <div class="card third">
+        <h2>Offline?</h2>
+        <p class="kv">
+          For true offline viewing, run the server locally and upload MP4 files.  
+          If you host online, MP4 files must be uploaded to the server to play.
+        </p>
+      </div>
+    </div>
+
+    <div class="footer">
+      Built for the Robotics Education community engagement group project.
+    </div>
+  </div>
+</body>
+</html>

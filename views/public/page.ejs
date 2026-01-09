@@ -1,0 +1,90 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title><%= page.title %></title>
+  <link rel="stylesheet" href="/public/style.css"/>
+  <script defer src="/public/app.js"></script>
+</head>
+<body>
+  <%- include("../partials/nav_public", { user }) %>
+  <div class="container">
+    <div class="breadcrumb">Home / <%= page.title %></div>
+    <div class="hero">
+      <div class="badge">Audience: <%= page.audience %></div>
+      <h1><%= page.title %></h1>
+      <p>Below is the learning content built from flexible blocks (text, images, videos, callouts, quizzes).</p>
+    </div>
+
+    <div class="grid">
+      <% blocks.forEach((b) => { %>
+        <div class="card block">
+          <% if (b.type === "text") { %>
+            <h2><%= b.data.heading || "Text Section" %></h2>
+            <p><%- (b.data.body || "").replace(/\n/g, "<br/>") %></p>
+
+          <% } else if (b.type === "image") { %>
+            <h2><%= b.data.heading || "Image" %></h2>
+            <% if (b.data.imageUrl) { %>
+              <img src="<%= b.data.imageUrl %>" alt="image"/>
+              <% if (b.data.caption) { %><p class="kv"><%= b.data.caption %></p><% } %>
+            <% } else { %>
+              <p class="kv">No image URL set yet.</p>
+            <% } %>
+
+          <% } else if (b.type === "video") { %>
+            <h2><%= b.data.heading || "Video" %></h2>
+            <% if (b.data.mode === "youtube" && b.data.youtubeUrl) { %>
+              <div class="video-frame">
+                <iframe src="<%= b.data.youtubeUrl %>" title="Video" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe>
+              </div>
+            <% } else if (b.data.mode === "mp4" && b.data.mp4Url) { %>
+              <video controls>
+                <source src="<%= b.data.mp4Url %>" type="video/mp4">
+              </video>
+            <% } else { %>
+              <p class="kv">No video set yet. Add YouTube embed URL or MP4 URL.</p>
+            <% } %>
+            <% if (b.data.caption) { %><p class="kv"><%= b.data.caption %></p><% } %>
+
+          <% } else if (b.type === "callout") { %>
+            <div class="callout">
+              <div class="badge"><%= b.data.kind || "Key idea" %></div>
+              <div class="hr"></div>
+              <div class="kv"><%- (b.data.body || "").replace(/\n/g, "<br/>") %></div>
+            </div>
+
+          <% } else if (b.type === "quiz") { %>
+            <div class="quiz" id="quiz-<%= b.id %>">
+              <h2><%= b.data.title || "Quick Quiz" %></h2>
+              <% (b.data.questions || []).forEach((q, qi) => { %>
+                <div data-q="1" data-answer="<%= q.answer %>" style="padding:10px 0; border-top:1px solid rgba(255,255,255,.08)">
+                  <div style="font-weight:700;"><%= (qi+1) %>) <%= q.q %></div>
+                  <div class="kv">
+                    <% (q.options || []).forEach((opt, oi) => { %>
+                      <label style="display:block; padding:6px 0;">
+                        <input type="radio" name="q-<%= b.id %>-<%= qi %>" value="<%= oi %>"/>
+                        <%= opt %>
+                      </label>
+                    <% }) %>
+                  </div>
+                  <div class="feedback kv" style="opacity:.75"></div>
+                </div>
+              <% }) %>
+              <button type="button" onclick="checkQuiz(<%= b.id %>)">Check Answers</button>
+              <div class="summary kv" style="margin-top:10px;"></div>
+            </div>
+          <% } %>
+        </div>
+      <% }) %>
+    </div>
+
+    <div class="footer">
+      Editors can update this page content from Admin → Pages → Blocks.
+    </div>
+  </div>
+</body>
+</html>
